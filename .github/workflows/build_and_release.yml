@@ -6,6 +6,8 @@ on: [push, pull_request]
 jobs:
   build_wheels:
     name: Build wheels on ${{matrix.arch}} for ${{ matrix.os }}
+    env:
+      CIBW_ARCHS_LINUX: ${{matrix.arch}}
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
@@ -38,7 +40,6 @@ jobs:
         run: |
           python -m cibuildwheel --output-dir wheelhouse
         env:
-          CIBW_ARCHS_LINUX: ${{matrix.arch}}
           CIBW_TEST_REQUIRES: pytest
           CIBW_TEST_COMMAND: "python -u {project}/run-tests.py"
       - uses: actions/upload-artifact@v2
