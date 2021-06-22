@@ -6,8 +6,6 @@ on: [push, pull_request]
 jobs:
   build_wheels:
     name: Build wheels on ${{matrix.arch}} for ${{ matrix.os }}
-    env:
-      CIBW_ARCHS_LINUX: ${{matrix.arch}}
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
@@ -31,7 +29,7 @@ jobs:
 
       - name: Install cibuildwheel
         run: |
-          python -m pip install cibuildwheel==1.6.3
+          python -m pip install cibuildwheel==1.11.0
       - name: Install Visual C++ for Python 2.7
         if: runner.os == 'Windows'
         run: |
@@ -40,6 +38,7 @@ jobs:
         run: |
           python -m cibuildwheel --output-dir wheelhouse
         env:
+          CIBW_ARCHS_LINUX: ${{matrix.arch}}
           CIBW_TEST_REQUIRES: pytest
           CIBW_TEST_COMMAND: "python -u {project}/run-tests.py"
       - uses: actions/upload-artifact@v2
