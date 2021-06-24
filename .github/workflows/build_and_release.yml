@@ -41,6 +41,9 @@ jobs:
           CIBW_ARCHS_LINUX: ${{matrix.arch}}
           CIBW_TEST_REQUIRES: pytest
           CIBW_TEST_COMMAND: "python -u {project}/run-tests.py"
+      - name: Check wheel
+        run: |
+          ls ./wheelhouse/
       - uses: actions/upload-artifact@v2
         with:
           path: ./wheelhouse/*.whl
