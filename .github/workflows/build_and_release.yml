@@ -23,18 +23,22 @@ jobs:
         with:
           python-version: '3.7'
 
+      - uses: docker/setup-qemu-action@v1
+        if: ${{ matrix.arch == 'aarch64' }}
+        name: Set up QEMU
+      
       - name: Install cibuildwheel
         run: |
           python -m pip install cibuildwheel==1.11.0
-      - name: Install Visual C++ for Python 2.7
-        if: runner.os == 'Windows'
-        run: |
-          choco install vcpython27 -f -y
+      #- name: Install Visual C++ for Python 2.7
+      #  if: runner.os == 'Windows'
+      #  run: |
+      #    choco install vcpython27 -f -y
       - name: Build wheels
         run: |
           python -m cibuildwheel --output-dir wheelhouse
         env:
-          CIBW_SKIP: "cp27-*"
+          #CIBW_SKIP: "cp27-*"
           CIBW_ARCHS_LINUX: ${{matrix.arch}}
           CIBW_TEST_REQUIRES: pytest
           CIBW_TEST_COMMAND: "python -u {project}/run-tests.py"
